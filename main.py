@@ -59,3 +59,6 @@ def run(period=600):
                 with open(TEMPERATURE_DATA_FILE, "a") as temp_file:
                     temp_file.write(export_string)
         time.sleep(period)
+
+
+run()
