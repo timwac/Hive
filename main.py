@@ -1,6 +1,6 @@
 """
-Main
-
+Connect to a Hive home thermostat and save the temperature to a file.
+Requires env variable HiveU and HiveP with your Hive username and password respectively
 """
 import os
 import time
