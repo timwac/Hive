@@ -5,3 +5,5 @@ Getting started guide: https://reflectivearchitect.wordpress.com/2017/02/01/gett
 requests: https://requests.readthedocs.io/
 
 github repo JS implementation: https://github.com/mandalae/hive-data
+
+sqlite: https://docs.python.org/3/library/sqlite3.html

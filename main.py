@@ -8,6 +8,9 @@ from datetime import datetime
 
 import requests
 
+import db_utils
+
+# TODO get rid once file based storage is removed
 TEMPERATURE_DATA_FILE = "temperature_data.txt"
 GLOBAL_HEADERS = {"Content-Type": "application/vnd.alertme.zoo-6.5+json",
                   "Accept": "application/vnd.alertme.zoo-6.5+json",
@@ -30,7 +33,7 @@ def authenticate(username: str, password: str) -> str:
 
 
 def get_temperature(session_id_: str) -> float:
-    """Request the temperature """
+    """Request the temperature. Session id is required in the header """
     headers = GLOBAL_HEADERS.copy()
     headers["X-Omnia-Access-Token"] = session_id_
     response = requests.get("https://api-prod.bgchprod.info:443/omnia/nodes", headers=headers)
@@ -48,17 +51,21 @@ def get_temperature_from_response(response):
 
 
 def run(period=600):
-    """"Get the temperature from the hive"""
+    """Get the temperature from the hive"""
     while 1:
         session_id = authenticate(os.getenv("HiveU"), os.getenv("HiveP"))
         if session_id:
             temperature = get_temperature(session_id)
             if temperature:
-                export_string = "{0}\t{1}\n".format(datetime.now().isoformat(), str(temperature))
+                date_time = datetime.now().isoformat()
+                export_string = "{0}\t{1}\n".format(date_time, str(temperature))
                 print(export_string)
+                # TODO Get rid of writing to a file
                 with open(TEMPERATURE_DATA_FILE, "a") as temp_file:
                     temp_file.write(export_string)
+                db_utils.store_measurement(date_time, str(temperature))
         time.sleep(period)
 
 
+# Temp. Run the script
 run()
